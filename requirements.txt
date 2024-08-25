@@ -1,0 +1,250 @@
+Need to learn Bounded Contexts and Context Mapping
+
+spam_classifier/
+│
+├── src/
+│   ├── domain/
+│   │   ├── entities.py
+│   │   ├── value_objects.py
+│   │   ├── aggregates.py
+│   │   ├── factories.py
+│   │   ├── repositories.py
+│   │   ├── services.py
+│   │   └── events.py
+│   │
+│   ├── application/
+│   │   ├── services.py
+│   │   └── dtos.py
+│   │
+│   ├── infrastructure/
+│   │   ├── persistence.py
+│   │   └── external_services.py
+│   │
+│   └── presentation/
+│       └── api.py
+│
+├── tests/
+│   ├── test_domain.py
+│   ├── test_application.py
+│   ├── test_infrastructure.py
+│   └── test_presentation.py
+│
+├── config.py
+├── requirements.txt
+└── README.md
+
+
+Domain: 
+entities
+- Email
+    •id
+    •body
+    •cleanliness
+    •bias
+
+value_objects:
+- EmailAddress
+- Cleanliness
+- Bias
+- Classification
+
+aggregates:
+- EmailClassification (compute, spam or not spam)
+    - email
+    - is spam
+    - if email.cleanliness 
+    - else is spam = false
+
+services:
+distincrt fuctionalities.
+    - identifying the bias
+    - identifying the cleanliness
+    - identifying if its spam or not.
+
+
+
+
+
+--------------------------------------------------------------------------------
+#ARCHITCTURE DESCRIPTION:
+Presentation Layer
+Responsible for presenting information to the user and interpreting user commands.
+
+Application Layer
+This is a thin layer which coordinates the application activity. It does not contain business logic. It does not hold the state of the business objects, but it can hold the state of an application task progress.
+
+Domain Layer
+This layer contains information about the domain. This is the heart of the business software. The state of business objects is held here. Persistence of the
+business objects and possibly their state is delegated to the infrastructure layer.
+
+Infrastructure Layer
+This layer acts as a supporting library for all the other layers. It provides communication between layers, implements persistence for business objects, contains supporting libraries for the user interface layer, etc.
+
+--------------------------------------------------------------------------------
+#V1
+DOMAIN LAYER
+
+entities.py:
+- Define Email entity (id, sender, recipient, subject, body)
+
+value_objects.py:
+- Define EmailAddress and ClassificationScore
+
+aggregates.py:
+- Define EmailClassification (combines Email and ClassificationScore)
+
+services.py:
+- Implement EmailPreprocessingService
+- Implement SpamClassificationService
+
+events.py:
+- Define EmailClassifiedEvent
+
+
+APPLICATION LAYER
+services.py:
+- Implement EmailClassificationService (orchestrates classification process)
+
+dtos.py:
+- Define EmailDTO and ClassificationResultDTO
+
+
+INFRASTRUCTURE LAYER
+persistence.py:
+- Implement concrete EmailRepository and ClassificationRepository
+
+external_services.py:
+- Implement MachineLearningService (for classification)
+
+
+PRESENTATION LAYER
+api.py:
+- Define API endpoints for email submission and classification
+
+OTHER FILES
+
+config.py:
+- Project configuration settings
+
+test_spam_classifier.py:
+- Tests for all components
+
+requirements.txt:
+- Project dependencies
+
+README.md:
+- Project description and setup instructions
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+#V2
+DOMAIN LAYER
+
+entities.py:
+- Define the Email entity
+- Properties: id, sender, recipient, subject, body, timestamp
+
+value_objects.py
+- Define EmailAddress value object
+- Define ClassificationScore value object
+
+aggregates.py
+- Define EmailClassification aggregate
+- Combine Email entity with ClassificationScore
+
+factories.py
+- Implement EmailFactory for creating Email entities
+- Implement EmailClassificationFactory for creating EmailClassification aggregates
+
+repositories.py
+- Define EmailRepository interface
+- Define ClassificationRepository interface
+
+services.py
+- Implement EmailPreprocessingService
+    • Methods for cleaning and tokenizing email content
+
+- Implement BiasDetectionService
+    • Methods for detecting and mitigating bias in the dataset
+
+
+- Implement SpamClassificationService
+• Core logic for classifying emails as spam or not spam
+
+events.py
+- Define EmailClassifiedEvent
+- Triggered when an email is classified
+
+
+APPLICATION LAYER
+services.py
+Implement EmailClassificationService
+
+Orchestrate the entire classification process
+Use domain services and repositories
+
+
+
+dtos.py
+
+Define EmailDTO for transferring email data
+Define ClassificationResultDTO for returning classification results
+
+Infrastructure Layer
+persistence.py
+
+Implement concrete EmailRepository
+Implement concrete ClassificationRepository
+Define ORM models if using an ORM
+
+external_services.py
+
+Implement MachineLearningService
+
+Integration with machine learning libraries for classification
+
+
+
+Presentation Layer
+api.py
+
+Define API endpoints for:
+
+Submitting emails for classification
+Retrieving classification results
+(Optional) Training or updating the classifier
+
+
+
+Other Files
+config.py
+
+Configuration settings for the project
+Database connection details
+Machine learning model parameters
+
+test_spam_classifier.py
+
+Unit tests for all components
+Integration tests for the classification process
+
+requirements.txt
+
+List all project dependencies
+
+README.md
+
+Project description
+Setup instructions
+Usage guidelines

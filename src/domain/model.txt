@@ -1,0 +1,129 @@
+Domain Model:
+Once we recieve an email we want to understand 3 things:
+1. The cleanliness of the email. (gramatical errors, etc.)
+2. The bias detection. (is it demanding? selesy? friendly?)
+3. Is it spam or not? (classify if the email's bias is melevalent)
+
+
+Uqiquetus language:
+Cleanliness - Number of gramatical errors
+Bias - a sentiment of the sentance, showcasing where the project is tending.
+Smap - an email which has an un-desirable/harmful bias
+
+Building out the project:
+1. Create detect the clenliness of the email. 
+    - Clean the email using regex 
+2. Detect the bias in the email
+3. Classify if its spam or not. 
+
+
+
+spam_classifier/
+│
+├── src/
+│   ├── domain/
+│   │   ├── entities.py
+│   │   ├── value_objects.py
+│   │   ├── aggregates.py
+│   │   ├── factories.py
+│   │   ├── repositories.py
+│   │   ├── services.py
+│   │   └── events.py
+│   │
+│   ├── application/
+│   │   ├── services.py
+│   │   └── dtos.py
+│   │
+│   ├── infrastructure/
+│   │   ├── persistence.py
+│   │   └── external_services.py
+│   │
+│   └── presentation/
+│       └── api.py
+│
+├── tests/
+│   ├── test_domain.py
+│   ├── test_application.py
+│   ├── test_infrastructure.py
+│   └── test_presentation.py
+│
+├── config.py
+├── requirements.txt
+└── README.md
+
+
+--------------------------------------------------------------------------------
+#ARCHITCTURE DESCRIPTION:
+Presentation Layer
+Responsible for presenting information to the user and interpreting user commands.
+
+Application Layer
+This is a thin layer which coordinates the application activity. It does not contain business logic. It does not hold the state of the business objects, but it can hold the state of an application task progress.
+
+Domain Layer
+This layer contains information about the domain. This is the heart of the business software. The state of business objects is held here. Persistence of the
+business objects and possibly their state is delegated to the infrastructure layer.
+
+Infrastructure Layer
+This layer acts as a supporting library for all the other layers. It provides communication between layers, implements persistence for business objects, contains supporting libraries for the user interface layer, etc.
+
+--------------------------------------------------------------------------------
+#V1
+DOMAIN LAYER
+
+entities.py:
+- Define Email entity (id, sender, recipient, subject, body)
+
+value_objects.py:
+- Define EmailAddress and ClassificationScore
+
+aggregates.py:
+- Define EmailClassification (combines Email and ClassificationScore)
+
+services.py:
+- Implement EmailPreprocessingService
+- Implement SpamClassificationService
+
+events.py:
+- Define EmailClassifiedEvent
+
+
+APPLICATION LAYER
+services.py:
+- Implement EmailClassificationService (orchestrates classification process)
+
+dtos.py:
+- Define EmailDTO and ClassificationResultDTO
+
+
+INFRASTRUCTURE LAYER
+persistence.py:
+- Implement concrete EmailRepository and ClassificationRepository
+
+external_services.py:
+- Implement MachineLearningService (for classification)
+
+
+PRESENTATION LAYER
+api.py:
+- Define API endpoints for email submission and classification
+
+OTHER FILES
+
+config.py:
+- Project configuration settings
+
+test_spam_classifier.py:
+- Tests for all components
+
+requirements.txt:
+- Project dependencies
+
+README.md:
+- Project description and setup instructions
+
+
+
+--------------------------------------------------------------------------------
+
+
